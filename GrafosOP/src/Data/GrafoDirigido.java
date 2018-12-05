@@ -8,63 +8,76 @@ import java.util.List;
 
 public class GrafoDirigido {
 	
-	public class Arista{
-		
-		private int x;
-		private int y;
-		
-		public Arista(int X, int Y)
-		{
-			x = X;
-			y = Y;
-		}
-		
-		public int getX() { return x; };
-		public int getY() { return y; };
-		
-		public String toString() {
-			return "[" + x + " " + y + "]";
-		}
-		
+	private final int V;
+	private final List<List<Integer>> adj;
+	
+	public GrafoDirigido(int Vertices) 
+	{
+		V = Vertices;
+		adj = new ArrayList<List<Integer>>();
+		for(int i=1; i<=V; i++)
+			adj.add(new ArrayList<Integer>());
 	}
 	
-	private List<List<Arista>> aristas;
 	
-	public GrafoDirigido() {
-		aristas = new ArrayList<List<Arista>>();
+	//check if g has cycles.
+	//if not, list vertex in topological order
+	//if yes, list the set of vertex that compose the cycles
+		
+	public List<List<Integer>> getCycles(GrafoDirigido g)
+	{
+		//List<List<Integer>> list = new ArrayList<List<Integer>>();
+		
+		boolean[] visited, recStack;
+		visited = new boolean[g.V];
+		recStack = new boolean[g.V];
+
+		for (int i = 0; i < g.V; i++) 
+		{
+			visited[i] = false;
+			recStack[i] = false;
+		}
+		
+		return recCycleCalc(g.V, visited, recStack);
+		
+		
+		//return list;		
+	}
+	
+	private List<List<Integer>> recCycleCalc(int indice, boolean[] visitados, boolean[] stack)
+	{
+		return null;
 	}
 	
 	public GrafoDirigido read()
 	{
-		GrafoDirigido g = new GrafoDirigido();
 		
-		File file = new File("C:\\Users\\Miguel\\git\\GrafosOP\\.git\\GrafosOP\\misc\\examplegrafos.txt"); 
-		  
+		GrafoDirigido g = null;
+		
+		//portatil
+		//File file = new File("C:\\Users\\Miguel\\git\\GrafosOP\\.git\\GrafosOP\\misc\\examplegrafos.txt"); 
+		//tocho
+		File file = new File("C:\\Users\\migue\\git\\GrafosOP\\GrafosOP\\misc\\examplegrafos.txt"); 
+
 		BufferedReader br;
 		try
 		{
 			br = new BufferedReader(new FileReader(file));
 			String st; 
 			int curIndex = 0;
-			while ((st = br.readLine()) != null) 
+			
+			st = br.readLine();
+			g = new GrafoDirigido(Integer.parseInt(st));
+			
+			while ((st = br.readLine()) != null && curIndex < g.V) 
 			{
-				int x,y;
-				x = y = -1;
-				g.aristas.add(new ArrayList<Arista>());
 				for	(int i=0; i<st.length(); i++)
 				{
 					char c = st.charAt(i);
-					try {
+					try 
+					{
 						int t = Integer.parseInt(c+"");
-						if(x == -1)
-							x = t;
-						else 
-						{
-							y = t;
-							g.aristas.get(curIndex).add(new Arista(x,y));
-							x = y = -1;
-						}
-							
+						g.adj.get(curIndex).add(t);						
 					}
 					catch(Exception e) {
 						//no hace na y lee el siguente
@@ -77,6 +90,7 @@ public class GrafoDirigido {
 		{
 			e.printStackTrace();
 		}		
+		
 		return g;
 	}
 
